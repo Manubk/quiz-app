@@ -1,0 +1,57 @@
+DOCUMENTAION
+------------
+
+-> USER
+	-> userId
+	-> userName
+	-> userEmail
+	-> userPass
+	-> userTotalQuizCompleted
+	-> userTotalQuizCreated
+	-> userTotalScore
+	-> userCreatedAt
+	-> userUpdatedAt
+	-> userCeatedBy
+	-> userUpdatedBy
+	
+-> QUIZS
+	-> quizId
+	-> quizName
+	-> quizTotalParticepents
+	-> quizQuestions + options + ans
+	-> quizCreatedAt
+	-> quizUpdatedAt
+	-> quizCreatedBy
+	-> quizUpdatedBy
+	-> quizOwner
+
+-> QUESTIONS + OPTIONS + ANS
+	-> questionId
+	-> option1
+	-> option2
+	-> option3
+	-> option4
+	-> ans
+	
+-> FLOWCHART
+
+	-> create account
+	-> create quizz
+	-> participate in quizz
+	-> see the score -> which quiz participated what scored and who is the top
+
+-> what i should do
+	-> create entity classes
+	-> create repo
+	-> create service
+	-> configure database in application.yml  ->done
+	-> logger the application
+	-> no hardcode the errors
+	-> optemise code
+	
+-> Different Things
+	-> audits 
+		-> createdAt
+		-> updatedAt
+		-> createdBy
+		-> updatedBy
