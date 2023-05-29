@@ -41,8 +41,8 @@ DOCUMENTAION
 	-> see the score -> which quiz participated what scored and who is the top
 
 -> what i should do
-	-> create entity classes
-	-> create repo
+	-> create entity classes  d
+	-> create repo 			  d
 	-> create service
 	-> configure database in application.yml  ->done
 	-> logger the application
@@ -55,3 +55,10 @@ DOCUMENTAION
 		-> updatedAt
 		-> createdBy
 		-> updatedBy
+		
+-> Problems
+	-> if hibernate validater issus comes 
+		-> <dependency>
+        	<groupId>org.hibernate.validator</groupId>
+        	<artifactId>hibernate-validator</artifactId>
+          </dependency>

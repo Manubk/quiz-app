@@ -1,6 +1,6 @@
 package com.quizapp.entity;
 
-import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +34,8 @@ public class User extends Auditable {
 	
 	@Column(name = "TOTAL_SCORE")
 	private Integer totalScore;
+	
+	
 	
 	
 	

@@ -2,20 +2,16 @@ package com.quizapp.entity;
 
 import java.time.LocalDate;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "QUIZS")
 @Data
+@NoArgsConstructor
 public class Quiz extends Auditable {
 	
 	@Id
@@ -29,17 +25,32 @@ public class Quiz extends Auditable {
 	@Column(name = "QUIZ_OWNER_NAME")
 	private Integer quizOwnerId;
 	
-	@Column(name = "CREATED_AT",updatable = false)
-	@CreationTimestamp
-	private LocalDate createdAt;
+	@Column(name = "TOPPER")
+	private Integer topperId;
 	
-	@Column(name = "UPDATED_AT",insertable = false)
-	@UpdateTimestamp
-	private LocalDate updatedAt;
+	@Column(name = "TOTAL_PARTICIPENTS")
+	private Integer totalParticipents;
 	
-	@Column(name = "CREATED_BY")
-	private String createdBy;
+	@OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<QuestionAnsOption> questionAnsOption;
 	
-	@Column(name = "UPDATED_BY")
-	private String updatedBy;
+	private void addQuestions (List<QuestionAnsOption> questionAnsOptions) {
+		this.questionAnsOption.addAll(questionAnsOptions);
+	}
+	
+	private void addQuestion(QuestionAnsOption questionAnsOption) {
+		this.questionAnsOption.add(questionAnsOption);
+	}
+	
+	private void removeQuestions(List<QuestionAnsOption> questionAnsOptions) {
+		this.questionAnsOption.remove(questionAnsOptions);
+	}
+	
+	private void removeQuestion(QuestionAnsOption questionAnsOption) {
+		this.questionAnsOption.remove(questionAnsOption);
+	}
+	
+	
 }
+	
+
