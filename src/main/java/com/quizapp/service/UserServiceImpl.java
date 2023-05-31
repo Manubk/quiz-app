@@ -4,9 +4,12 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.quizapp.dto.requestdto.RequestUserDto;
+import com.quizapp.dto.responsedto.ResponseUserDto;
 import com.quizapp.entity.User;
 import com.quizapp.repo.UserRepo;
 
@@ -21,32 +24,62 @@ public class UserServiceImpl implements IUserService {
 	
 	
 	@Override
-	public boolean save(User user) {
-		User save = userRepo.save(user);
+	public boolean saveUser(RequestUserDto requestUserDto) {
+		log.info("saveUser "+requestUserDto.toString());
 		
-		if(save.getUserId() != null)
+		Optional<User> user = userRepo.findById(requestUserDto.getUserId());
+		
+		BeanUtils.copyProperties(requestUserDto, user.get());
+		
+		User savedUser = userRepo.save(user.get());
+
+		if(savedUser.getUserId() != null)
 			return true;
 		
 		return false;
 	}
 
 	@Override
-	public boolean update(User user) {
-		return save(user);
+	public boolean updateUser(RequestUserDto requestUserDto) {
+		log.info("updateUser "+requestUserDto.toString());
+		
+		Optional<User> user = userRepo.findById(requestUserDto.getUserId());
+		
+		BeanUtils.copyProperties(requestUserDto, user.get());
+		
+		try {
+			userRepo.save(user.get());
+			return true;
+		} catch (Exception e) {
+			log.error("updateUser");
+			return false;
+		}
+
 	}
 
 	@Override
-	public User findUserById(Integer userId) {
+	public ResponseUserDto findUserById(Integer userId) {
+		log.info("findUserById Id -> "+userId);
+		
 		Optional<User> findById = userRepo.findById(userId);
 		
-		return findById.get();
+		if(findById.isPresent()) {
+			ResponseUserDto userDto = new ResponseUserDto();
+			
+			BeanUtils.copyProperties(findById.get(), userDto);
+			
+			return userDto;
+		}
+		
+		return null;
 	}
 
 	@Override
 	public boolean deleteUserById(Integer userId) {
-			User user= findUserById(userId);
+		log.info("deleteUserById ID -> "+userId);
+			ResponseUserDto userDto= findUserById(userId);
 			
-			if(user != null) {
+			if(userDto != null) {
 				userRepo.deleteById(userId);
 				return true;
 			}
@@ -56,9 +89,32 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public boolean isUserPresent(Integer userId) {
-		log.info("isUserPresent");
+		log.info("isUserPresent userId -> "+userId);
 		return userRepo.existsById(userId);
 		
 	}
 
+	@Override
+	public boolean isUserPresent(String email) {
+		log.info("isUserPresent Email -> "+email);
+		return false;
+	}
+
+	@Override
+	public ResponseUserDto findUserByEmailAndPass(RequestUserDto requestUserDto) {
+		log.info("isUserValid -> "+requestUserDto.toString());
+		
+		User user = userRepo.findUserByEmailAndPass(requestUserDto.getUserEmail(), requestUserDto.getUserPass());
+		
+		if(user != null) {
+			ResponseUserDto userDto = new ResponseUserDto();
+			BeanUtils.copyProperties(user, userDto);
+			return userDto;
+		}
+	
+		return null;
+	}
+
+	
+	
 }

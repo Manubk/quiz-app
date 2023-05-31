@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.quizapp.dto.requestdto.RequestUserDto;
+import com.quizapp.dto.responsedto.ResponseUserDto;
 import com.quizapp.entity.User;
 import com.quizapp.service.IUserService;
 
@@ -28,10 +30,9 @@ public class UserController {
 	private IUserService userService;
 	
 	@PostMapping("/user")
-	public ResponseEntity<String>updateUser(@RequestBody User user){
+	public ResponseEntity<String>updateUser(@RequestBody RequestUserDto requestUserDto){
 		
-		boolean saved = userService.save(user);
-		
+		boolean saved = userService.saveUser(requestUserDto);
 		
 		return (true)?new ResponseEntity<>("Saved Sucessfully"
 				,HttpStatus.ACCEPTED):new ResponseEntity<>("Saved UnSucessFull",HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,20 +40,22 @@ public class UserController {
 	}
 
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<User> getAllUsers(@PathVariable Integer userId){
+	public ResponseEntity<ResponseUserDto> getAllUsers(@PathVariable Integer userId){
 		
 		if (userService.isUserPresent(userId)) {
-			User user = userService.findUserById(userId);
-			return  new ResponseEntity<User>(user, HttpStatus.OK);
+			ResponseUserDto userDto = userService.findUserById(userId);
+			
+			return  new ResponseEntity<ResponseUserDto>(userDto, HttpStatus.OK);
 					
 		}
 			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 	}
 	
+	
 	@PutMapping("/user")
-	public ResponseEntity<String> saveUser(@RequestBody User user){
+	public ResponseEntity<String> saveUser(@RequestBody RequestUserDto requestUserDto){
 		logger.debug(null);
-		boolean saved = userService.save(user);
+		boolean saved = userService.saveUser(requestUserDto);
 		
 		return (saved)?new ResponseEntity<>("Updated Sucessfully"
 				,HttpStatus.ACCEPTED):new ResponseEntity<>("Updated UnSucessfull",HttpStatus.INTERNAL_SERVER_ERROR);

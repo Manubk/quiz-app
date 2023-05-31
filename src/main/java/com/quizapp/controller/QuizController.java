@@ -11,12 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quizapp.dto.requestdto.RequestQuestionAnsDto;
 import com.quizapp.dto.requestdto.RequestQuizDto;
+import com.quizapp.dto.responsedto.ResponseQuestionAnsDto;
+import com.quizapp.dto.responsedto.ResponseQuizDto;
 import com.quizapp.entity.QuestionAnsOption;
 import com.quizapp.entity.Quiz;
 import com.quizapp.entity.User;
@@ -36,7 +39,7 @@ public class QuizController {
 	private IQuizService quizService;
 	
 	@Autowired
-	private IQuestionAndAns questionAndAnsService;
+	private IQuestionAndAns questionAndAns;
 	
 	/*
 	 * Create quiz quiz
@@ -56,9 +59,12 @@ public class QuizController {
 	 * Get quiz by its ID
 	 */
 	@GetMapping("/quiz/{quizId}")
-	public ResponseEntity<Quiz> getQuizById(Integer quizId){
-		
-		return null;
+	public ResponseEntity<ResponseQuizDto> getQuizById(Integer quizId){
+		log.info("getQuizById QuizId = "+quizId);
+	
+    	ResponseQuizDto responseQuiz = quizService.getQuizById(quizId);
+	
+		return new ResponseEntity<ResponseQuizDto>(responseQuiz,HttpStatus.OK);
 	}
 	
 	
@@ -67,11 +73,24 @@ public class QuizController {
 	 */
 	@GetMapping("/quiz/user/{userId}")
 	public ResponseEntity<List<Quiz>> getAllQuizByUserId(Integer userId){
-		log.info("getAllQuixByUserId");
-	
+		log.info("getAllQuizByUserId");
+		System.out.println(userId+"hi");
 		return null;
 		
 		
+	}
+	
+	/*
+	 * Get all the Questions by QuizId
+	 */
+	@GetMapping("/quiz/{quizId}/questions")
+	public ResponseEntity<List<ResponseQuestionAnsDto>> getAllQuestionsByQuizId(Integer quizId){
+		log.info("getAllQuestionsByQuizId");
+		
+	
+		List<ResponseQuestionAnsDto> allQuestionsByQuizId = questionAndAns.getAllQuestionsByQuizId(quizId);
+		
+		return new ResponseEntity<List<ResponseQuestionAnsDto>>(allQuestionsByQuizId,HttpStatus.OK);
 	}
 	
 	/*
@@ -82,5 +101,43 @@ public class QuizController {
 		return null;
 	}
 	
+	/*
+	 * Add the Question to Quiz
+	 */
+	@PostMapping("/quiz/{quizId}/question")
+	public ResponseEntity<String> addQuestionToQuiz( Integer quizId,@RequestBody RequestQuestionAnsDto requestQuestonDto){
+		log.info("addQuestionToQuiz");
+		boolean isQuestionAdded = quizService.addQuestionToQuiz(quizId, requestQuestonDto);
+		
+		return (isQuestionAdded)?new ResponseEntity<String>("Question Added",HttpStatus.ACCEPTED):
+			new ResponseEntity<String>("OOPs Unable to Add",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	/*
+	 * Add the Questions to Quiz
+	 */
+	@PostMapping("/quiz/{quizId}/questions")
+	public ResponseEntity<String> addQuestionsToQuiz(@PathVariable Integer quizId,@RequestBody List<RequestQuestionAnsDto> requestQuestionAnsDtos){
+		log.info("addQuestionsToQuiz");
+		
+//		return new ResponseEntity<String>(requestQuestionAnsDtos.toString(),HttpStatus.OK);
+		boolean isQuestionsAdded = quizService.addQuestionsTOQuiz(quizId, requestQuestionAnsDtos);
+		
+		return (isQuestionsAdded)?new ResponseEntity<String>("Questions Added",HttpStatus.ACCEPTED):
+			new ResponseEntity<String>("OOPs Unable to Add",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	/*
+	 * Delete the Questions from Quiz
+	 */
+	@DeleteMapping("/quiz/{quizId}/question")
+	public ResponseEntity<String> deleteQuestionFromQuiz(@PathVariable Integer quizId){
+		log.info("deleteQuestionFromQuiz");
+		
+		boolean isQuestionDeleted = quizService.deleteQuestionFromQuiz(quizId);
+		
+		return(isQuestionDeleted)?new ResponseEntity<String>("Question Deleted",HttpStatus.OK):
+			new ResponseEntity<String>("OOPs Unable To Delete",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 	
 }

@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name="QUESTION_ANS_OPT")
@@ -24,6 +25,7 @@ public class QuestionAnsOption extends Auditable {
 	@Column(name = "QUESTION_ID")
 	private Integer questionId;
 	
+
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name = "QUIZ_Id")
 	private Quiz quiz;
@@ -45,4 +47,10 @@ public class QuestionAnsOption extends Auditable {
 	
 	@Column(name = "OPTION_4")
 	private String option4;
+	
+	public String toString() {
+		return "Question ["+this.question+","+this.answer+","+this.option1+","
+				+this.option2 +","+this.option3+","+this.option4+","+this.quiz.getQuizId()
+				+","+this.quiz.getQuizName()+"]";
+	}
 }

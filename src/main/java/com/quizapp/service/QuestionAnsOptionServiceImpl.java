@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import com.quizapp.dto.requestdto.RequestQuestionAnsDto;
 import com.quizapp.dto.responsedto.ResponseQuestionAnsDto;
 import com.quizapp.entity.QuestionAnsOption;
+import com.quizapp.entity.Quiz;
 import com.quizapp.repo.QuestionAndAnsRepo;
+import com.quizapp.repo.QuizRepo;
 
 import jakarta.transaction.Transactional;
 
@@ -25,7 +27,13 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	
 	@Autowired
 	private QuestionAndAnsRepo questionAndAnsRepo;
+	
+	@Autowired
+	private QuizRepo quizRepo;
 
+	/*
+	 * Create a Single Question
+	 */
 	@Override
 	public boolean createQuestion(RequestQuestionAnsDto requestQuestionAnsDto) {
 		log.info("CreateQuestion");
@@ -43,7 +51,9 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 		return false;
 	}
 	
-	
+	/*
+	 * creating a multipal question
+	 */
 	@Override
 	public boolean createQuestions(List<RequestQuestionAnsDto> requestQuestionAnsDtos) {
 		log.info("createQuestions");
@@ -62,12 +72,18 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 		
 		return false;
 	}
-
+	
+	/*
+	 * Deleting the Questions Based on Quiz ID
+	 */
 	@Override
 	public boolean deleteQuestionByQuizId(Integer quizId) {
 		log.info("deleteQuestionByQuizId");
+		
+		Optional<Quiz> quiz = quizRepo.findById(quizId);
+		
 		try {
-			questionAndAnsRepo.deleteQuestionByQuizId(quizId);
+			questionAndAnsRepo.deleteQuestionByQuizId(quiz.get());
 			return true;
 		} catch (Exception e) {
 			log.info("deleteQuestionByQuizId");
@@ -76,6 +92,9 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 		}
 	}
 
+	/*
+	 * Update Question
+	 */
 	@Override
 	public boolean updateQuestion(RequestQuestionAnsDto requestQuestionAnsDto) {
 		log.info("updateQuestion");
@@ -93,7 +112,10 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 		}
 		
 	}
-
+	
+	/*
+	 * Updating the List Of Question
+	 */
 	@Override
 	public boolean updateQuestions(List<RequestQuestionAnsDto> requestQuestionAnsDtos) {
 		log.info("updateQuestions");
@@ -117,6 +139,9 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 		
 	}
 
+	/*
+	 * Getting the Question Based on Id
+	 */
 	@Override
 	public ResponseQuestionAnsDto getQuestionById(Integer questionId) {
 		log.info("getQuestionById");
@@ -133,10 +158,16 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 		return null;
 	}
 
+	/*
+	 * Getting All The Questiong which are Related to Quiz
+	 */
 	@Override
 	public List<ResponseQuestionAnsDto> getAllQuestionsByQuizId(Integer quizId) {
-		log.info("getAllQuestonsByQuizId");
-		List<QuestionAnsOption> allQuestions = questionAndAnsRepo.getAllQuestionsByQuizId(quizId);
+		log.info("getAllQuestonsByQuizId ");
+		
+		Optional<Quiz> quiz = quizRepo.findById(quizId);
+		
+		List<QuestionAnsOption> allQuestions = questionAndAnsRepo.getAllQuestionsByQuizId(quiz.get());
 		List<ResponseQuestionAnsDto> responseQuestionDto = new ArrayList<>();
 		if(!allQuestions.isEmpty()) {
 			for(QuestionAnsOption question : allQuestions) {
@@ -149,14 +180,19 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 			
 		return null;
 	}
-
+	
+	/*
+	 * It tells is the given Queston is Present
+	 */
 	@Override
 	public boolean isQuestionPresent(Integer questionId) {
 		log.info("isQuestionPresent");
 		return questionAndAnsRepo.existsById(questionId);
 	}
 
-
+	/*
+	 * This will delete the Question By Id
+	 */
 	@Override
 	public boolean deleteQuestionById(Integer questionId) {
 		log.info("deleteQuestionById");

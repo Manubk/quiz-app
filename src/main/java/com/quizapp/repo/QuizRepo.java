@@ -11,4 +11,6 @@ import com.quizapp.entity.Quiz;
 public interface QuizRepo extends JpaRepository<Quiz, Integer>{
 	
 	 public List<Quiz> findByQuizOwnerId(Integer quizOwnerId);
+	 
+	 
 }

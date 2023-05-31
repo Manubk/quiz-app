@@ -1,5 +1,6 @@
 package com.quizapp.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -7,8 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.quizapp.dto.requestdto.RequestParticipateDto;
+import com.quizapp.dto.responsedto.ResponseParticipateDto;
 import com.quizapp.entity.Participate;
 import com.quizapp.repo.ParticipateRepo;
+import com.quizapp.repo.QuizRepo;
+import com.quizapp.repo.UserRepo;
 
 @Service
 public class ParticipateServiceImpl implements IParticipateService {
@@ -17,62 +22,55 @@ public class ParticipateServiceImpl implements IParticipateService {
 
 	@Autowired
 	private ParticipateRepo participateRepo;
+	
+	@Autowired
+	private UserRepo userRepo;
+	
+	@Autowired
+	private QuizRepo quizRepo;
 
 	@Override
-	public boolean save(Participate participate) {
-		log.info("saveParticipate");
-
-		Participate save = participateRepo.save(participate);
-
-		if (save.getParticipationId() != null)
-			return true;
-
+	public boolean savePaticipation(RequestParticipateDto requestParticipateDto) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean update(Participate participate) {
-		log.info("updateParticipate");
-
-		try {
-			Participate save = participateRepo.save(participate);
-			return true;
-		} catch (Exception e) {
-			log.error("exception in updateParticipate");
-			e.printStackTrace();
-		}
-
+	public boolean updateParticipation(RequestParticipateDto requestParticipateDto) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean deleteById(Integer participateId) {
-		log.info("DeleteById");
-
-		try {
-			participateRepo.deleteById(participateId);
-			return true;
-		} catch (Exception e) {
-			log.error("exception in deleteById");
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Participate findById(Integer participateId) {
-		log.info("findParticipateById");
-		
-		Optional<Participate> findById = participateRepo.findById(participateId);
-		
-		return findById.get();
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public boolean isParticipatePresent(Integer participateId) {
-		log.info("isPresent");
-		return participateRepo.existsById(participateId);
-	
+		// TODO Auto-generated method stub
+		return false;
 	}
+
+	@Override
+	public List<ResponseParticipateDto> findAllParticipationByUser(Integer userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ResponseParticipateDto> findAllParticipationByQuiz(Integer quizId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 }

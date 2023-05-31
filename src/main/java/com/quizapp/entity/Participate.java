@@ -5,24 +5,28 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "PARTICIPATE")
-public class Participate {
+public class Participate extends Auditable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "PARTICIPATION_ID")
 	private Integer participationId;
 	
-	@Column(name = "USER_ID")
-	private Integer userId;
+	@OneToOne
+	@JoinColumn(name = "USER_ID")
+	private User user;
 	
-	@Column(name = "QUIZ_ID")
-	private Integer quizId;
+	@OneToOne
+	@JoinColumn(name = "QUIZ_ID")
+	private Quiz quiz;
 	
 	@Column(name = "TOTAL_POINTS")
 	private Integer totalPoints;

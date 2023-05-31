@@ -12,10 +12,6 @@ public class RequestQuizDto  {
 	private String quizName;
 	
 	private Integer userId;
-	
-	private Integer topperId;
-	
-	private Integer totalParticipents;
-	
+		
 	private List<Integer> questionsAnsIds;
 }
