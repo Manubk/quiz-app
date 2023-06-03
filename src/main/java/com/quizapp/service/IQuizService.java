@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.quizapp.dto.requestdto.RequestQuestionAnsDto;
 import com.quizapp.dto.requestdto.RequestQuizDto;
+import com.quizapp.dto.responsedto.ResponseParticipateDto;
 import com.quizapp.dto.responsedto.ResponseQuestionAnsDto;
 import com.quizapp.dto.responsedto.ResponseQuizDto;
+import com.quizapp.entity.Participate;
 import com.quizapp.entity.QuestionAnsOption;
 import com.quizapp.entity.Quiz;
+import com.quizapp.entity.User;
 
 @Service
 public interface IQuizService {
@@ -59,8 +62,23 @@ public interface IQuizService {
 	public ResponseQuizDto getQuizById(Integer quizId);
 	
 	/*
+	 * Get Quiz By Id
+	 */
+	public Quiz getInQuizById(Integer quizId);
+	
+	/*
+	 * Get all the Quiz Created By user
+	 */
+	public List<ResponseQuizDto> getAllTheQuizByUserId(Integer userId);
+	
+	/*
 	 * Get all the questions for respective quiz
 	 */
 	public List<ResponseQuestionAnsDto> getAllQuestionByQuizId(Integer quizId);
+	
+	/*
+	 * updation the quiz values based on every participation
+	 */
+	public boolean updateQuizByParticipate(Participate participate);
 	
 }

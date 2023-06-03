@@ -34,5 +34,9 @@ public class Participate extends Auditable {
 	@Column(name = "GAINED_POINTS")
 	private Integer gainedPoints;
 	
+	@Column(name = "NO_OF_ATTEMPTS")
+	public Integer noOfAttempts = 0;
+	
+	
 	private boolean result ;
 }

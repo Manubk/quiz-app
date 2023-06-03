@@ -2,6 +2,8 @@ package com.quizapp.dto.responsedto;
 
 import java.util.List;
 
+import com.quizapp.entity.User;
+
 import lombok.Data;
 
 @Data
@@ -11,12 +13,9 @@ public class ResponseQuizDto {
 	
 	private String quizName;
 	
-	private Integer userId;
-	
-	private Integer topperId;
+	private User quizTopper;
 	
 	private Integer totalParticipents;
 	
-	List<ResponseQuestionAnsDto> responseQuestionAnsDtos;
 
 }

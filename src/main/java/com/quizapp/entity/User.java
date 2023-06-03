@@ -2,6 +2,8 @@ package com.quizapp.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,13 +42,23 @@ public class User extends Auditable {
 	@Column(name = "TOTAL_SCORE")
 	private Integer totalScore = 0;
 	
+	@Column(name = "TOTAL_GAINED")
+	private Integer totalGainer = 0;
+	
 	@Column(name = "DELETED")
 	private boolean isDeleted = false;
 	
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL,mappedBy ="user" )
 	private List<Quiz> quizs;
 	
-	
+	@Override
+	public String toString() {
+		return "USER =[userId="+this.userId+",userName="+this.userName+",userEmail="+this.userEmail+
+				",userPass="+this.userPass+",noOfQuizParticipated="+this.noOfQuizParticipated+
+				",noOfQuizCreate="+this.noOfQuizCreate+",totalScore="+this.totalScore+",totalGainer"
+				+this.totalGainer+",isDeleted="+this.isDeleted+"]";
+	}
 	
 	
 }

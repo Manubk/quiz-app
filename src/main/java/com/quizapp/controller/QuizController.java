@@ -23,6 +23,7 @@ import com.quizapp.dto.responsedto.ResponseQuizDto;
 import com.quizapp.entity.QuestionAnsOption;
 import com.quizapp.entity.Quiz;
 import com.quizapp.entity.User;
+import com.quizapp.repo.QuizRepo;
 import com.quizapp.service.IQuestionAndAns;
 import com.quizapp.service.IQuizService;
 
@@ -46,7 +47,7 @@ public class QuizController {
 	 */
 	@PostMapping("/quiz")
 	public ResponseEntity<String> saveQuiz(@RequestBody RequestQuizDto quizDto ){
-		log.info("saveQuiz");
+		log.info("saveQuiz QuizDto = "+quizDto.toString());
 		
 		boolean isQuizCreated= quizService.createQuiz(quizDto);
 		
@@ -72,10 +73,12 @@ public class QuizController {
 	 * Get all the Quiz created By User by UserId
 	 */
 	@GetMapping("/quiz/user/{userId}")
-	public ResponseEntity<List<Quiz>> getAllQuizByUserId(Integer userId){
-		log.info("getAllQuizByUserId");
-		System.out.println(userId+"hi");
-		return null;
+	public ResponseEntity<List<ResponseQuizDto>> getAllQuizByUserId(Integer userId){
+		log.info("getAllQuizByUserId userId = "+userId);
+		
+		List<ResponseQuizDto> quizDtos = quizService.getAllTheQuizByUserId(userId);
+		
+		return new ResponseEntity<List<ResponseQuizDto>>(quizDtos,HttpStatus.OK);
 		
 		
 	}
@@ -98,7 +101,22 @@ public class QuizController {
 	*/
 	@DeleteMapping
 	public ResponseEntity<String> deleteAllQuizByUserId(Integer userId){
+		log.info("deleteAllQuizByUserId userId = "+userId);
+		
+		
 		return null;
+	}
+	
+	/*
+	Delete the Quiz created by UserId using quizID
+	*/
+	@DeleteMapping
+	public ResponseEntity<String> deleteAllQuizByQuizId(Integer quizId){
+		log.info("deleteAllQuizByQuizId quizId = "+quizId);
+		boolean isDeleted = quizService.deleteQuizById(quizId);
+		
+		return (isDeleted)?new ResponseEntity<String>("Deleted SucessFull",HttpStatus.OK):
+			new ResponseEntity<String>("Deleted UnSucessFull",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	/*

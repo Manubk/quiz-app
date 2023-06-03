@@ -27,11 +27,11 @@ public class UserServiceImpl implements IUserService {
 	public boolean saveUser(RequestUserDto requestUserDto) {
 		log.info("saveUser "+requestUserDto.toString());
 		
-		Optional<User> user = userRepo.findById(requestUserDto.getUserId());
+		User user = new User();
 		
-		BeanUtils.copyProperties(requestUserDto, user.get());
+		BeanUtils.copyProperties(requestUserDto, user);
 		
-		User savedUser = userRepo.save(user.get());
+		User savedUser = userRepo.save(user);
 
 		if(savedUser.getUserId() != null)
 			return true;
@@ -65,9 +65,10 @@ public class UserServiceImpl implements IUserService {
 		
 		if(findById.isPresent()) {
 			ResponseUserDto userDto = new ResponseUserDto();
+			log.info("User = "+findById.get().toString());
 			
 			BeanUtils.copyProperties(findById.get(), userDto);
-			
+			log.info("userDto ="+userDto.toString());
 			return userDto;
 		}
 		
@@ -114,6 +115,32 @@ public class UserServiceImpl implements IUserService {
 	
 		return null;
 	}
+
+	@Override
+	public User findInUserById(Integer userId) {
+		log.info("findInUserById userId = "+userId);
+		
+		Optional<User> user = userRepo.findById(userId);
+		
+		if(user.isPresent())
+			return user.get();
+		
+		return null;
+	}
+
+	@Override
+	public boolean saveUser(User user) {
+		log.info("saveUser userId = "+user.getUserId());
+		try {
+			User userSaved = userRepo.save(user);
+			return true;
+		} catch (Exception e) {
+			log.error("saveUser userId = "+user.getUserId());
+			return false;
+		}
+	
+	}
+
 
 	
 	

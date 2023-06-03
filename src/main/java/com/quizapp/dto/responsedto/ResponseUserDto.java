@@ -9,9 +9,9 @@ public class ResponseUserDto {
 	
 	private String userName;
 	
-	private String noOfQuizParticipated;
-	
-	private String noOfQuizCreated;
+	private Integer noOfQuizParticipated;
+	   			  
+	private Integer noOfQuizCreate;
 	
 	private Integer totalScore;
 	

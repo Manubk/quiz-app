@@ -21,5 +21,7 @@ public class RequestQuestionAnsDto {
 	
 	private Integer quizId;
 	
+	private String submitedAns;
+	
 	
 }

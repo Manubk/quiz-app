@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.quizapp.dto.requestdto.RequestParticipateDto;
 import com.quizapp.dto.responsedto.ResponseParticipateDto;
 import com.quizapp.entity.Participate;
+import com.quizapp.entity.Quiz;
+import com.quizapp.entity.User;
 
 @Service
 public interface IParticipateService {
@@ -17,7 +19,7 @@ public interface IParticipateService {
 	public boolean savePaticipation(RequestParticipateDto requestParticipateDto);
 	
 	/*
-	 * Updating the Participation data rearly used
+	 * Updating the Participation data early used
 	 */
 	public boolean updateParticipation(RequestParticipateDto requestParticipateDto);
 	
@@ -26,6 +28,10 @@ public interface IParticipateService {
 	 */
 	public boolean deleteById(Integer participateId);
 	
+	/*
+	 * Deleting the participation data by userId
+	 */
+	public boolean deleteByUserId(Integer userId);
 	/*
 	 * Getting the Participation By Id
 	 */
@@ -45,4 +51,6 @@ public interface IParticipateService {
 	 * Getting the Paricipation By Quiz
 	 */
 	public List<ResponseParticipateDto> findAllParticipationByQuiz(Integer quizId);
+	
+	public Participate findByQuizAndUser(User user,Quiz quiz);
 }

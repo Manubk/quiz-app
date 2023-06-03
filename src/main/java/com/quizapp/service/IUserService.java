@@ -25,6 +25,11 @@ public interface IUserService {
 	public boolean saveUser(RequestUserDto requestUserDto);
 	
 	/*
+	 * Creating User
+	 */
+	public boolean saveUser(User user);
+
+	/*
 	 * Updating a exsisting user
 	 */
 	public boolean updateUser(RequestUserDto requestUserDto);
@@ -43,4 +48,9 @@ public interface IUserService {
 	 * Checking is user credentials is a valid
 	 */
 	public ResponseUserDto findUserByEmailAndPass(RequestUserDto requestUserDto);
+	
+	/*
+	 * Getting the User from Id
+	 */
+	public User findInUserById(Integer userId);
 }

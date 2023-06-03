@@ -24,14 +24,16 @@ import com.quizapp.service.IUserService;
 @RestController
 public class UserController {
 	
-	Logger logger = LoggerFactory.getLogger(UserController.class);
+	
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
 	
 	@Autowired
 	private IUserService userService;
 	
 	@PostMapping("/user")
 	public ResponseEntity<String>updateUser(@RequestBody RequestUserDto requestUserDto){
-		
+		log.info("updateUser user ="+requestUserDto.toString());
 		boolean saved = userService.saveUser(requestUserDto);
 		
 		return (true)?new ResponseEntity<>("Saved Sucessfully"
@@ -54,7 +56,7 @@ public class UserController {
 	
 	@PutMapping("/user")
 	public ResponseEntity<String> saveUser(@RequestBody RequestUserDto requestUserDto){
-		logger.debug(null);
+		
 		boolean saved = userService.saveUser(requestUserDto);
 		
 		return (saved)?new ResponseEntity<>("Updated Sucessfully"

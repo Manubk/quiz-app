@@ -12,10 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.quizapp.dto.requestdto.RequestQuestionAnsDto;
 import com.quizapp.dto.requestdto.RequestQuizDto;
+import com.quizapp.dto.responsedto.ResponseParticipateDto;
 import com.quizapp.dto.responsedto.ResponseQuestionAnsDto;
 import com.quizapp.dto.responsedto.ResponseQuizDto;
+import com.quizapp.entity.Participate;
 import com.quizapp.entity.QuestionAnsOption;
 import com.quizapp.entity.Quiz;
+import com.quizapp.entity.User;
 import com.quizapp.repo.QuestionAndAnsRepo;
 import com.quizapp.repo.QuizRepo;
 
@@ -29,6 +32,12 @@ public class QuizServiceImpl implements IQuizService {
 	
 	@Autowired
 	private QuestionAndAnsRepo questionAnsRepo;
+	
+	@Autowired
+	private IParticipateService participateService;
+	
+	@Autowired
+	private IUserService userService;
 
 	@Override
 	public boolean isQuizPresent(Integer quizId) {
@@ -38,11 +47,16 @@ public class QuizServiceImpl implements IQuizService {
 
 	@Override
 	public boolean createQuiz(RequestQuizDto requestQuizDto) {
-		log.info("createQuiz");
+		log.info("createQuiz QuizDto = "+requestQuizDto.toString());
 		
 		Quiz quiz = new Quiz();
+		
 		BeanUtils.copyProperties(requestQuizDto, quiz);
+		
+		User user = userService.findInUserById(requestQuizDto.getUserId());
+		quiz.setUser(user);
 		log.info(quiz.toString());
+		
 		Quiz quizSaved = quizRepo.save(quiz);
 		
 		if(quizSaved.getQuizId() != null)
@@ -201,6 +215,68 @@ public class QuizServiceImpl implements IQuizService {
 		
 		return responseQuestions;
 	}
+
+
+	@Override
+	public Quiz getInQuizById(Integer quizId) {
+		log.info("getInQuizById quizId = "+quizId);
+		
+		Optional<Quiz> quiz = quizRepo.findById(quizId);
+		
+		if(quiz.isPresent())
+			return quiz.get();
+		
+		return null;
+	}
+
+	@Override
+	public boolean updateQuizByParticipate(Participate participate) {
+		log.info("updateQuizByParticipate participateId = "+participate.getParticipationId());
+		
+		Quiz quiz = participate.getQuiz();
+		quiz.setTotalParticipents(quiz.getTotalParticipents()+1);
+		
+		if(quiz.getTopScore() <= participate.getGainedPoints() || quiz.getQuizTopper() == null) {
+			quiz.setTopScore(participate.getGainedPoints());
+			quiz.setQuizTopper(participate.getUser());
+		}
+			
+		try {
+			quizRepo.save(quiz);
+			return true;
+			
+		} catch (Exception e) {
+			log.error("updateQuizByParticipate");
+			e.printStackTrace();
+			return false;
+		}
+		
+
+	}
+
+	@Override
+	public List<ResponseQuizDto> getAllTheQuizByUserId(Integer userId) {
+		log.info("getAllTheQuizByUserId userId = "+userId);
+		
+		User user = userService.findInUserById(userId);
+		
+		List<Quiz> quizs = quizRepo.findByUser(user);
+		
+		List<ResponseQuizDto> quizDtos = new ArrayList<>();
+		
+		for(Quiz quiz : quizs) {
+			ResponseQuizDto quizDto = new ResponseQuizDto();
+			
+			BeanUtils.copyProperties(quiz, quizDto);
+			quizDtos.add(quizDto);
+		}
+		
+		return quizDtos;
+	}
+
+	
+
+
 
 
 }
