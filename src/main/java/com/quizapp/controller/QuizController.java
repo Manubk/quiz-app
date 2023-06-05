@@ -83,34 +83,36 @@ public class QuizController {
 		
 	}
 	
-	/*
-	 * Get all the Questions by QuizId
-	 */
-	@GetMapping("/quiz/{quizId}/questions")
-	public ResponseEntity<List<ResponseQuestionAnsDto>> getAllQuestionsByQuizId(Integer quizId){
-		log.info("getAllQuestionsByQuizId");
-		
-	
-		List<ResponseQuestionAnsDto> allQuestionsByQuizId = questionAndAns.getAllQuestionsByQuizId(quizId);
-		
-		return new ResponseEntity<List<ResponseQuestionAnsDto>>(allQuestionsByQuizId,HttpStatus.OK);
-	}
+//	/*
+//	 * Get all the Questions by QuizId
+//	 */
+//	@GetMapping("/quiz/{quizId}/questions")
+//	public ResponseEntity<List<ResponseQuestionAnsDto>> getAllQuestionsByQuizId(Integer quizId){
+//		log.info("getAllQuestionsByQuizId");
+//		
+//	
+//		List<ResponseQuestionAnsDto> allQuestionsByQuizId = questionAndAns.getAllQuestionsByQuizId(quizId);
+//		
+//		return new ResponseEntity<List<ResponseQuestionAnsDto>>(allQuestionsByQuizId,HttpStatus.OK);
+//	}
 	
 	/*
 	Delete the Quiz created by UserId
 	*/
-	@DeleteMapping
+	@DeleteMapping("/quiz/user/{userId}")
 	public ResponseEntity<String> deleteAllQuizByUserId(Integer userId){
 		log.info("deleteAllQuizByUserId userId = "+userId);
 		
+		boolean isQuizDeleted = quizService.deleteQuizByUserId(userId);
 		
-		return null;
+		return (isQuizDeleted)?new ResponseEntity<String>("Deleted SucessFull",HttpStatus.OK):
+			new ResponseEntity<String>("Unable to Delete",HttpStatus.BAD_REQUEST);
 	}
 	
 	/*
 	Delete the Quiz created by UserId using quizID
 	*/
-	@DeleteMapping
+	@DeleteMapping("/quiz/{quizId}")
 	public ResponseEntity<String> deleteAllQuizByQuizId(Integer quizId){
 		log.info("deleteAllQuizByQuizId quizId = "+quizId);
 		boolean isDeleted = quizService.deleteQuizById(quizId);
@@ -119,43 +121,43 @@ public class QuizController {
 			new ResponseEntity<String>("Deleted UnSucessFull",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	/*
-	 * Add the Question to Quiz
-	 */
-	@PostMapping("/quiz/{quizId}/question")
-	public ResponseEntity<String> addQuestionToQuiz( Integer quizId,@RequestBody RequestQuestionAnsDto requestQuestonDto){
-		log.info("addQuestionToQuiz");
-		boolean isQuestionAdded = quizService.addQuestionToQuiz(quizId, requestQuestonDto);
-		
-		return (isQuestionAdded)?new ResponseEntity<String>("Question Added",HttpStatus.ACCEPTED):
-			new ResponseEntity<String>("OOPs Unable to Add",HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+//	/*
+//	 * Add the Question to Quiz
+//	 */
+//	@PostMapping("/quiz/{quizId}/question")
+//	public ResponseEntity<String> addQuestionToQuiz( Integer quizId,@RequestBody RequestQuestionAnsDto requestQuestonDto){
+//		log.info("addQuestionToQuiz");
+//		boolean isQuestionAdded = quizService.addQuestionToQuiz(quizId, requestQuestonDto);
+//		
+//		return (isQuestionAdded)?new ResponseEntity<String>("Question Added",HttpStatus.ACCEPTED):
+//			new ResponseEntity<String>("OOPs Unable to Add",HttpStatus.INTERNAL_SERVER_ERROR);
+//	}
 	
-	/*
-	 * Add the Questions to Quiz
-	 */
-	@PostMapping("/quiz/{quizId}/questions")
-	public ResponseEntity<String> addQuestionsToQuiz(@PathVariable Integer quizId,@RequestBody List<RequestQuestionAnsDto> requestQuestionAnsDtos){
-		log.info("addQuestionsToQuiz");
-		
-//		return new ResponseEntity<String>(requestQuestionAnsDtos.toString(),HttpStatus.OK);
-		boolean isQuestionsAdded = quizService.addQuestionsTOQuiz(quizId, requestQuestionAnsDtos);
-		
-		return (isQuestionsAdded)?new ResponseEntity<String>("Questions Added",HttpStatus.ACCEPTED):
-			new ResponseEntity<String>("OOPs Unable to Add",HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+//	/*
+//	 * Add the Questions to Quiz
+//	 */
+//	@PostMapping("/quiz/{quizId}/questions")
+//	public ResponseEntity<String> addQuestionsToQuiz(@PathVariable Integer quizId,@RequestBody List<RequestQuestionAnsDto> requestQuestionAnsDtos){
+//		log.info("addQuestionsToQuiz");
+//		
+////		return new ResponseEntity<String>(requestQuestionAnsDtos.toString(),HttpStatus.OK);
+//		boolean isQuestionsAdded = quizService.addQuestionsTOQuiz(quizId, requestQuestionAnsDtos);
+//		
+//		return (isQuestionsAdded)?new ResponseEntity<String>("Questions Added",HttpStatus.ACCEPTED):
+//			new ResponseEntity<String>("OOPs Unable to Add",HttpStatus.INTERNAL_SERVER_ERROR);
+//	}
 	
-	/*
-	 * Delete the Questions from Quiz
-	 */
-	@DeleteMapping("/quiz/{quizId}/question")
-	public ResponseEntity<String> deleteQuestionFromQuiz(@PathVariable Integer quizId){
-		log.info("deleteQuestionFromQuiz");
-		
-		boolean isQuestionDeleted = quizService.deleteQuestionFromQuiz(quizId);
-		
-		return(isQuestionDeleted)?new ResponseEntity<String>("Question Deleted",HttpStatus.OK):
-			new ResponseEntity<String>("OOPs Unable To Delete",HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+//	/*
+//	 * Delete the Questions from Quiz
+//	 */
+//	@DeleteMapping("/quiz/{quizId}/question")
+//	public ResponseEntity<String> deleteQuestionFromQuiz(@PathVariable Integer quizId){
+//		log.info("deleteQuestionFromQuiz");
+//		
+//		boolean isQuestionDeleted = quizService.deleteQuestionFromQuiz(quizId);
+//		
+//		return(isQuestionDeleted)?new ResponseEntity<String>("Question Deleted",HttpStatus.OK):
+//			new ResponseEntity<String>("OOPs Unable To Delete",HttpStatus.INTERNAL_SERVER_ERROR);
+//	}
 	
 }

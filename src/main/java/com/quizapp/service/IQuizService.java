@@ -32,6 +32,11 @@ public interface IQuizService {
 	 * Deleting a Quiz By QuizID
 	 */
 	public boolean deleteQuizById(Integer quizId);
+	
+	/*
+	 * Delete the Quiz By userId
+	 */
+	public boolean deleteQuizByUserId(Integer userId);
 
 	/*
 	 * Update a exsisting Quiz

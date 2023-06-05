@@ -22,6 +22,8 @@ import com.quizapp.entity.User;
 import com.quizapp.repo.QuestionAndAnsRepo;
 import com.quizapp.repo.QuizRepo;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class QuizServiceImpl implements IQuizService {
 	
@@ -270,8 +272,25 @@ public class QuizServiceImpl implements IQuizService {
 			BeanUtils.copyProperties(quiz, quizDto);
 			quizDtos.add(quizDto);
 		}
-		
+	
 		return quizDtos;
+	}
+	
+	@Transactional
+	@Override
+	public boolean deleteQuizByUserId(Integer userId) {
+		log.info("deleteQuizByUserId userId = "+userId);
+		
+		try {
+			User user = userService.findInUserById(userId);
+			int deleted = quizRepo.deleteByUser(user);
+			log.info(deleted+" items deleted");
+			return true;
+		} catch (Exception e) {
+			log.error("deleteByUserId userId = "+userId);
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	
