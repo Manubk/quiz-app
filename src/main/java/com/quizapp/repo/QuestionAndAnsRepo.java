@@ -21,7 +21,7 @@ public interface QuestionAndAnsRepo extends JpaRepository<QuestionAnsOption, Int
 	@Modifying
 	@Transactional
 	@Query("delete from QuestionAnsOption  where quiz =:quiz")
-	public boolean deleteQuestionByQuizId(Quiz quiz);
+	public int deleteQuestionByQuizId(Quiz quiz);
 
 	@Query("from  QuestionAnsOption  where quiz = :quiz")
 	public List<QuestionAnsOption> getAllQuestionsByQuizId(Quiz quiz);

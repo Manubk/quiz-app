@@ -26,7 +26,7 @@ public class QuestionAnsOption extends Auditable {
 	private Integer questionId;
 	
 
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinColumn(name = "QUIZ_Id")
 	private Quiz quiz;
 	

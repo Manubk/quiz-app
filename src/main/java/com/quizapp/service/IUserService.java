@@ -1,5 +1,7 @@
 package com.quizapp.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.quizapp.dto.requestdto.RequestUserDto;
@@ -53,4 +55,9 @@ public interface IUserService {
 	 * Getting the User from Id
 	 */
 	public User findInUserById(Integer userId);
+	
+	/*
+	 * Getting All the Users
+	 */
+	public List<User> findAllUsers();
 }

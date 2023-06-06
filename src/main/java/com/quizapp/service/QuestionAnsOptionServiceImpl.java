@@ -2,25 +2,33 @@ package com.quizapp.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.quizapp.dto.requestdto.RequestQuestionAnsDto;
 import com.quizapp.dto.responsedto.ResponseQuestionAnsDto;
+import com.quizapp.dto.responsedto.ResponseQuizDto;
 import com.quizapp.entity.QuestionAnsOption;
 import com.quizapp.entity.Quiz;
+import com.quizapp.entity.User;
 import com.quizapp.repo.QuestionAndAnsRepo;
 import com.quizapp.repo.QuizRepo;
 
 import jakarta.transaction.Transactional;
 
 @Service
-public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
+public class QuestionAnsOptionServiceImpl implements IQuestionAndAnsService {
 	
 	
 	private static final Logger log = LoggerFactory.getLogger(QuestionAnsOptionServiceImpl.class);
@@ -31,15 +39,26 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	@Autowired
 	private QuizRepo quizRepo;
 
+//	@Autowired
+//	private IUserService userService;
+	
+	@Autowired
+	private IQuizService quizService;
+	
 	/*
 	 * Create a Single Question
 	 */
 	@Override
-	public boolean createQuestion(RequestQuestionAnsDto requestQuestionAnsDto) {
-		log.info("CreateQuestion");
+	public boolean createQuestion(@RequestBody RequestQuestionAnsDto requestQuestionAnsDto) {
+		log.info("CreateQuestion requestDto = "+requestQuestionAnsDto.toString());
+		
+		 Quiz quiz = quizService.getInQuizById(requestQuestionAnsDto.getQuizId());
 		
 		QuestionAnsOption questionAnsOption = new QuestionAnsOption();
+		
 		BeanUtils.copyProperties(requestQuestionAnsDto, questionAnsOption);
+		
+		questionAnsOption.setQuiz(quiz);
 		
 		System.out.println(questionAnsOption.toString());
 		
@@ -55,18 +74,23 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	 * creating a multipal question
 	 */
 	@Override
-	public boolean createQuestions(List<RequestQuestionAnsDto> requestQuestionAnsDtos) {
+	public boolean createQuestions(@RequestBody List<RequestQuestionAnsDto> requestQuestionAnsDtos) {
 		log.info("createQuestions");
+		
+		Quiz quiz = quizService.getInQuizById(requestQuestionAnsDtos.get(0).getQuizId());
+		
 		List<QuestionAnsOption> questionAnswers = new ArrayList<>();
 		
 		for(RequestQuestionAnsDto reqQues : requestQuestionAnsDtos) {
 			
 			QuestionAnsOption questionAns = new QuestionAnsOption();
 			BeanUtils.copyProperties(reqQues, questionAns);
+			questionAns.setQuiz(quiz);
 			questionAnswers.add(questionAns);
 		}
 		
 		List<QuestionAnsOption> saveAllQuestion = questionAndAnsRepo.saveAll(questionAnswers);
+		
 		if(saveAllQuestion.size() == requestQuestionAnsDtos.size()) 
 			return true;
 		
@@ -78,7 +102,7 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	 */
 	@Override
 	public boolean deleteQuestionByQuizId(Integer quizId) {
-		log.info("deleteQuestionByQuizId");
+		log.info("deleteQuestionByQuizId quizId = "+quizId);
 		
 		Optional<Quiz> quiz = quizRepo.findById(quizId);
 		
@@ -97,7 +121,7 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	 */
 	@Override
 	public boolean updateQuestion(RequestQuestionAnsDto requestQuestionAnsDto) {
-		log.info("updateQuestion");
+		log.info("updateQuestion RequestDto = "+requestQuestionAnsDto.toString());
 		
 		QuestionAnsOption questionAnsOption = new QuestionAnsOption();
 		BeanUtils.copyProperties(requestQuestionAnsDto, questionAnsOption);
@@ -119,17 +143,19 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	@Override
 	public boolean updateQuestions(List<RequestQuestionAnsDto> requestQuestionAnsDtos) {
 		log.info("updateQuestions");
-
-		List<QuestionAnsOption> questionAnswers = new ArrayList<>();
-
-		for (RequestQuestionAnsDto reqQues : requestQuestionAnsDtos) {
-
-			QuestionAnsOption questionAns = new QuestionAnsOption();
-			BeanUtils.copyProperties(reqQues, questionAns);
-			questionAnswers.add(questionAns);
-		}
+		//Pending
+		
+		 List<QuestionAnsOption> questions = getInAllTheQuestionByQuiz(requestQuestionAnsDtos.get(0).getQuizId());
+		 
+		 
+		 
+		 BeanUtils.copyProperties(requestQuestionAnsDtos,questions);
+		 
+		 requestQuestionAnsDtos.forEach((req) -> System.out.println(req.toString()));
+		 questions.forEach((que) -> System.out.println(que.toString()));
+		 
 		try {
-			List<QuestionAnsOption> saveAllQuestion = questionAndAnsRepo.saveAll(questionAnswers);
+			List<QuestionAnsOption> saveAllQuestion = questionAndAnsRepo.saveAll(questions);
 			return true;
 		} catch (Exception e) {
 			log.error("updateQuestions");
@@ -144,22 +170,22 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	 */
 	@Override
 	public ResponseQuestionAnsDto getQuestionById(Integer questionId) {
-		log.info("getQuestionById");
+		log.info("getQuestionById questionId = "+questionId);
 		
 		Optional<QuestionAnsOption> question = questionAndAnsRepo.findById(questionId);
 		
 		if(question.isPresent()) {
 			ResponseQuestionAnsDto responseQuestion = new ResponseQuestionAnsDto();
-			BeanUtils.copyProperties(question, responseQuestion);
-			System.out.println(question);
-			System.out.println(responseQuestion);
+			BeanUtils.copyProperties(question.get(), responseQuestion);
+		    log.info(question.toString());
+		    log.info(responseQuestion.toString());
 			return responseQuestion;
 		}
 		return null;
 	}
 
 	/*
-	 * Getting All The Questiong which are Related to Quiz
+	 * Getting All The Question which are Related to Quiz
 	 */
 	@Override
 	public List<ResponseQuestionAnsDto> getAllQuestionsByQuizId(Integer quizId) {
@@ -195,7 +221,7 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 	 */
 	@Override
 	public boolean deleteQuestionById(Integer questionId) {
-		log.info("deleteQuestionById");
+		log.info("deleteQuestionById questionId = "+questionId);
 		
 		try {
 			questionAndAnsRepo.deleteById(questionId);
@@ -206,6 +232,64 @@ public class QuestionAnsOptionServiceImpl implements IQuestionAndAns {
 			return false;
 		}
 		
+	}
+	
+
+	public boolean deleteQuestionByQuiz(Integer quizId){
+		log.info("deleteQuestionByQuiz quizId = "+quizId);
+		
+		try {
+			Quiz quiz = quizService.getInQuizById(quizId);
+			
+			 int deletedRows = questionAndAnsRepo.deleteQuestionByQuizId(quiz);
+			 
+			 log.info(deletedRows+" questions deleted");
+			 
+			 return true;
+		} catch (Exception e) {
+			log.error("deletedQuestionByQuiz quizId ="+quizId);
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+
+	@Override
+	public QuestionAnsOption getInQuestionById(Integer questionId) {
+		log.info("getInQuestionById questionId = "+questionId);
+		
+		Optional<QuestionAnsOption> question = questionAndAnsRepo.findById(questionId);
+		
+		return question.get();
+	}
+
+	@Override
+	public List<QuestionAnsOption> getInAllTheQuestionByQuiz(Integer quizId) {
+		log.info("getInAllTheQuestionByQuiz quizId = "+quizId);
+		
+		Quiz quiz = quizService.getInQuizById(quizId);
+		
+	    List<QuestionAnsOption> questions = questionAndAnsRepo.getAllQuestionsByQuizId(quiz);
+	    
+		return questions;
+	}
+
+	@Override
+	public List<ResponseQuestionAnsDto> getAllQuestions() {
+		log.info("getAll");
+		
+		List<QuestionAnsOption> questions = questionAndAnsRepo.findAll();
+	
+		List<ResponseQuestionAnsDto> responseDtos = new ArrayList<>();
+		
+		for(QuestionAnsOption question : questions) {
+			ResponseQuestionAnsDto responseDto = new ResponseQuestionAnsDto();
+			
+			BeanUtils.copyProperties(question, responseDto);
+			responseDtos.add(responseDto);
+		}
+				
+		return responseDtos;
 	}
 	
 	

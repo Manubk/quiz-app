@@ -16,8 +16,12 @@ public interface IParticipateService {
 	/*
 	 * Creating the new Participation Data
 	 */
-	public boolean savePaticipation(RequestParticipateDto requestParticipateDto);
+	public boolean savePaticipation(RequestParticipateDto requestParticipateDto,Integer participentId,Integer quizId);
 	
+	/*
+	 * Creating participation
+	 */
+	public boolean savePaticipation(RequestParticipateDto requestParticipateDto);
 	/*
 	 * Updating the Participation data early used
 	 */
@@ -32,10 +36,16 @@ public interface IParticipateService {
 	 * Deleting the participation data by userId
 	 */
 	public boolean deleteByUserId(Integer userId);
+	
+	/*
+	 * Deleting By Quiz
+	 */
+	public boolean deleteByQuizId(Integer quizId);
+	
 	/*
 	 * Getting the Participation By Id
 	 */
-	public Participate findById(Integer participateId);
+	public ResponseParticipateDto findById(Integer participateId);
 
 	/*
 	 * Finding is Participation is present
@@ -52,5 +62,13 @@ public interface IParticipateService {
 	 */
 	public List<ResponseParticipateDto> findAllParticipationByQuiz(Integer quizId);
 	
+	/*
+	 * Getting based on User and Quiz
+	 */
 	public Participate findByQuizAndUser(User user,Quiz quiz);
+	
+	/*
+	 * Getting all the paticipates
+	 */
+	public List<ResponseParticipateDto> getAllParticipates();
 }

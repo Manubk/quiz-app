@@ -99,13 +99,14 @@ public class ParticipateServiceImpl implements IParticipateService {
 	}
 
 	@Override
-	public Participate findById(Integer participateId) {
+	public ResponseParticipateDto findById(Integer participateId) {
 		log.info("findById participationId = "+participateId);
 		
 		Optional<Participate> participate = participateRepo.findById(participateId);
-		
+		ResponseParticipateDto responseDto = new ResponseParticipateDto();
 		try {
-		return participate.orElseThrow();
+		BeanUtils.copyProperties(participate.get(), responseDto);
+		return responseDto;
 		} catch (Exception e) {
 			log.error("findById participationId = "+participateId);
 			e.printStackTrace();
@@ -190,6 +191,46 @@ log.info("findAllParticipationByQuiz QuizId = "+quizId);
 		
 		
 		return participate;
+	}
+
+	@Override
+	public boolean savePaticipation(RequestParticipateDto requestParticipateDto, Integer participentId,
+			Integer quizId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteByQuizId(Integer quizId) {
+		log.info("deleteByQuizId quizId = "+quizId);
+		
+		Quiz quiz = quizService.getInQuizById(quizId);
+		
+		try {
+			participateRepo.deleteByQuiz(quiz);
+			return true;
+		} catch (Exception e) {
+			log.error("deleteByQuizId quizId = "+quizId);
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public List<ResponseParticipateDto> getAllParticipates() {
+		log.info("getAllParticipates");
+		List<Participate> participates = participateRepo.findAll();
+		
+		List<ResponseParticipateDto> responseDtos = new ArrayList<>();
+		
+		for(Participate participate : participates ) {
+			ResponseParticipateDto responseDto = new ResponseParticipateDto();
+			
+			BeanUtils.copyProperties(participate, responseDto);
+			responseDtos.add(responseDto);
+		}
+		
+		return responseDtos;
 	}
 
 }

@@ -293,6 +293,24 @@ public class QuizServiceImpl implements IQuizService {
 		}
 	}
 
+	@Override
+	public List<ResponseQuizDto> getAllQuizs() {
+		log.info("getAllQuizs");
+		
+		 List<Quiz> allQuiz = quizRepo.findAll();
+		 
+		List<ResponseQuizDto> allQuizDtos = new ArrayList<>();
+		
+		for(Quiz quiz : allQuiz) {
+			ResponseQuizDto quizDto = new ResponseQuizDto();
+			
+			BeanUtils.copyProperties(quiz, quizDto);
+			
+			allQuizDtos.add(quizDto);
+		}
+ 		return allQuizDtos;
+	}
+
 	
 
 

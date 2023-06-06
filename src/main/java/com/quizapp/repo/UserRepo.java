@@ -12,4 +12,6 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 	@Query("from User where userEmail = :email and userPass = :pass")
 	public User findUserByEmailAndPass(String email, String pass);
 	
+	
+	
 }

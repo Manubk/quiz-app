@@ -82,6 +82,11 @@ public interface IQuizService {
 	public List<ResponseQuestionAnsDto> getAllQuestionByQuizId(Integer quizId);
 	
 	/*
+	 * Get all Quizs
+	 */
+	public List<ResponseQuizDto> getAllQuizs();
+	
+	/*
 	 * updation the quiz values based on every participation
 	 */
 	public boolean updateQuizByParticipate(Participate participate);

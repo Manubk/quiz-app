@@ -53,11 +53,20 @@ public class UserController {
 			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 	}
 	
+	@GetMapping("/users")
+	public ResponseEntity<List<User>> getAllUsers(){
+		log.info("getAllUsers");
+		
+		List<User> allUsers = userService.findAllUsers();
+		
+		return new ResponseEntity<List<User>>(allUsers,HttpStatus.OK);
+	}
+	
 	
 	@PutMapping("/user")
 	public ResponseEntity<String> saveUser(@RequestBody RequestUserDto requestUserDto){
 		
-		boolean saved = userService.saveUser(requestUserDto);
+		boolean saved = userService.updateUser(requestUserDto);
 		
 		return (saved)?new ResponseEntity<>("Updated Sucessfully"
 				,HttpStatus.ACCEPTED):new ResponseEntity<>("Updated UnSucessfull",HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,5 +84,8 @@ public class UserController {
 		
 		return new ResponseEntity<String>("No Record To Delete",HttpStatus.BAD_REQUEST);
 	}
+	
+	
+
 	
 }

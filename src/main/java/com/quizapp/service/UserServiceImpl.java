@@ -1,5 +1,6 @@
 package com.quizapp.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class UserServiceImpl implements IUserService {
 		log.info("updateUser "+requestUserDto.toString());
 		
 		Optional<User> user = userRepo.findById(requestUserDto.getUserId());
-		
+	
 		BeanUtils.copyProperties(requestUserDto, user.get());
 		
 		try {
@@ -139,6 +140,15 @@ public class UserServiceImpl implements IUserService {
 			return false;
 		}
 	
+	}
+
+	@Override
+	public List<User> findAllUsers() {
+		log.info("findAllUsers");
+		
+		List<User> users = userRepo.findAll();
+		
+		return users;
 	}
 
 

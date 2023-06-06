@@ -13,11 +13,11 @@ import lombok.Data;
 @Data
 public class Auditable {
 	
-	@Column(name = "CREATED_AT")
+	@Column(name = "CREATED_AT" ,updatable = false)
 	@CreationTimestamp
 	private LocalDate createdAt;
 	
-	@Column(name = "UPDATED_AT")
+	@Column(name = "UPDATED_AT",insertable = false)
 	@UpdateTimestamp
 	private LocalDate updatedAt;
 	
