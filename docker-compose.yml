@@ -1,0 +1,25 @@
+
+
+services:
+ app:
+  image: malteshbk/quiz-app1
+  networks:
+  - quiz-app
+  ports:
+  - 9001:9001
+ 
+ mysql:
+  image: mysql
+  container_name: quiz-app-database
+  networks:
+  - quiz-app
+  environment:
+   MYSQL_ROOT_PASSWORD: root
+   MYSQL_DATABASE: mb
+ 
+networks:
+  quiz-app:
+   name: custom-quiz-app
+   
+  
+
