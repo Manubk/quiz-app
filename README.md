@@ -14,9 +14,10 @@ The Interactive Quiz App API is a powerful and versatile application programming
 
 ## Screenshots
 
-![user create]([https://drive.google.com/file/d/1XbBbUMPnPjsqglJ50TECMXgFnrPNQLWr/view?usp=drive_link](https://drive.google.com/file/d/1cgQapPOXiUgvrS7WJunfgkXQuvhLyU2e/view?usp=drive_link))
-![question api](https://drive.google.com/file/d/1XbBbUMPnPjsqglJ50TECMXgFnrPNQLWr/view?usp=drive_link)
-![question api](https://drive.google.com/file/d/1cgQapPOXiUgvrS7WJunfgkXQuvhLyU2e/view?usp=drive_link)
+<img width="937" alt="quiz-app-demo-1" src="https://github.com/Manubk/quiz-app/assets/106378286/1d574d2b-9645-48fc-9599-766f70335b73">
+<img width="932" alt="update-user" src="https://github.com/Manubk/quiz-app/assets/106378286/03aa8dd6-615f-47f0-85be-1c5c97cbae1c">
+<img width="940" alt="question-ans-api" src="https://github.com/Manubk/quiz-app/assets/106378286/91f2794d-4c10-4b3a-bcfc-eeb497b5c947">
+
 
 
 ## Requirments
